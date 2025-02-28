@@ -103,7 +103,7 @@ app.post('/', ensureAuthenticated(), scheduleFormValidator, async (c) => {
   return c.redirect('/schedules/' + scheduleId);
 });
 
-app.get('/:scheduleId', ensureAuthenticated(), scheduleFormValidator, async (c) => {
+app.get('/:scheduleId', ensureAuthenticated(), scheduleIdValidator, async (c) => {
   const { user } = c.get('session') ?? {};
   const schedule = await prisma.schedule.findUnique({
     where: { scheduleId: c.req.valid('param').scheduleId },
@@ -281,7 +281,7 @@ function isMine(userId, schedule) {
   return schedule && parseInt(schedule.createdBy, 10) === parseInt(userId, 10);
 }
 
-app.get('/:scheduleId/edit', ensureAuthenticated(),scheduleFormValidator, async (c) => {
+app.get('/:scheduleId/edit', ensureAuthenticated(),scheduleIdValidator, async (c) => {
   const { user } = c.get('session') ?? {};
   const schedule = await prisma.schedule.findUnique({
     where: { scheduleId: c.req.valid('param').scheduleId },
